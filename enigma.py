@@ -13,7 +13,7 @@ class M1:
     def Individual_Input(self, s):
         s = s.capitalize()
 
-        if self.pos[2] == ord(self.Rotors[2][-1]) - self.character_offset_factor:
+        if self.pos[2] == ord(self.Rotors[2][-1]) + 1 - self.character_offset_factor:
             self.pos[1] += 1
             self.turn_3 = True
             if self.pos[1] == 27:
@@ -29,15 +29,9 @@ class M1:
                 self.pos[0] = 1
 
 
-
-
         self.pos[2] += 1
         if self.pos[2] == 27:
             self.pos[2] = 1
-
-
-
-
 
 
 
@@ -48,50 +42,59 @@ class M1:
             value += 26
 
         s = self.Rotors[2][value]
-        # print(s)
+        print(s)
 
 
-        value = ord(s) - self.character_offset_factor - self.pos[2] + 1
+        value = ord(s) - self.character_offset_factor - self.pos[2] + self.pos[1]
         if value > 25:
             value %= 26
         elif value < 0:
             value += 26
         s = self.Rotors[1][value]
-        # print(s)
+        print(s)
 
-        value = ord(s) - self.character_offset_factor
+        value = ord(s) - self.character_offset_factor - self.pos[1] + self.pos[0]
         if value > 25:
             value %= 26
         elif value < 0:
             value += 26
         s = self.Rotors[0][value]
-        # print(s)
+        print(s)
 
-        value = ord(s) - self.character_offset_factor
+        value = ord(s) - self.character_offset_factor - self.pos[0] + 1
         if value > 25:
             value %= 26
         elif value < 0:
             value += 26
         s = self.reflector[value]
-        # print(s)
+        print(s)
 
-        reflected_value = self.Rotors[0].index(s) + self.character_offset_factor
+        temp_ord = ord(s)+self.pos[0]-1
+
+        if temp_ord > 90:
+            temp_ord = temp_ord%90 + self.character_offset_factor-1
+        elif temp_ord < 65:
+            temp_ord += 26
+
+        reflected_value = self.Rotors[0].index(chr(temp_ord)) + self.character_offset_factor + self.pos[1] - 1
+
         if reflected_value > 90:
             reflected_value = reflected_value%90 + self.character_offset_factor-1
         elif reflected_value < 65:
             reflected_value += 26
 
-        s = chr(reflected_value)
-        # print(s)
 
+        s = chr(reflected_value)
+        print(s)
         reflected_value = self.Rotors[1].index(s) + self.character_offset_factor + self.pos[2] - 1
+
         if reflected_value > 90:
             reflected_value = reflected_value%90 + self.character_offset_factor-1
         elif reflected_value < 65:
             reflected_value += 26
 
         s = chr(reflected_value)
-        # print(s)
+        print(s)
 
         reflected_value = self.Rotors[2].index(s) + self.character_offset_factor - self.pos[2] + 1
         if reflected_value > 90:
@@ -103,10 +106,10 @@ class M1:
 
         print(s)
 
-machine = M1([III, II, I], [1, 1, 1], UKW_B)
+machine = M1([III, II, I], [2, 1, 1], UKW_B)
 
-for _ in range(20):
-    machine.Individual_Input('A')
+machine.Individual_Input('A')
+machine.Individual_Input('A')
 
 print(machine.pos)
 
