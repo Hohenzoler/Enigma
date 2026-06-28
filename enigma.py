@@ -4,11 +4,10 @@ from rotors import *
 class M1:
     def __init__(self, Rotors, reflector, Initial_pos=[0,0,0], ring_settings=[0,0,0]):
         self.Rotors = [Rotors[0][0], Rotors[1][0], Rotors[2][0]]  # [Left rotor, Middle rotor, Right rotor]
-        self.Triping = [Rotors[0][1], Rotors[1][1], Rotors[2][1]]
         self.pos = Initial_pos  # [Left pos, Middle pos, Right pos],
         self.reflector = reflector
         self.character_offset_factor = 65
-        self.ring_position = ring_settings
+        self.ring_position = [ord(Rotors[0][1]) + ring_settings[0] - self.character_offset_factor, ord(Rotors[1][1]) + ring_settings[1] - self.character_offset_factor, ord(Rotors[2][1]), + ring_settings[2] - self.character_offset_factor]
 
 
     def Individual_Input(self, s):
@@ -47,9 +46,9 @@ class M1:
 
     def rotate_rotors(self):
         self.pos[2] = (self.pos[2] + 27) % 26
-        if ord(self.Triping[2]) - self.character_offset_factor == self.pos[2] - 1:
+        if self.ring_position[2] == self.pos[2] - 1:
             self.pos[1] = (self.pos[1] + 27) % 26
-            if ord(self.Triping[1]) - self.character_offset_factor == self.pos[1] - 1:
+            if self.ring_position[1] == self.pos[1] - 1:
                 self.pos[0] = (self.pos[0] + 27) % 26
 
         # print(self.pos)
@@ -68,9 +67,9 @@ class M1:
 
 
 if __name__ == '__main__':
-    machine = M1([I, II, III], UKW_B)
+    machine = M1([I, II, III], UKW_B, [0,0,0], [0,0,0])
 
-    print(machine.Text_Input('Hello World'))
+    print(machine.Text_Input('A'))
 
 
 
